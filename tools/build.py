@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Build the public static documentation. No app source or user records belong here."""
 import html
+import hashlib
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://mshota395.github.io/reading-log-support/"
+STYLE_REVISION = hashlib.sha256((ROOT / "assets/style.css").read_bytes()).hexdigest()[:12]
 
 
 def page(title, body, route="", active=""):
@@ -18,7 +20,7 @@ def page(title, body, route="", active=""):
 <meta name="description" content="読書記録アプリのプライバシーポリシーとサポート案内。">
 <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <title>{html.escape(title)} · 読書記録</title><link rel="canonical" href="{SITE}{route}">
-<link rel="icon" href="{prefix}assets/app-icon.png"><link rel="stylesheet" href="{prefix}assets/style.css"></head>
+<link rel="icon" href="{prefix}assets/app-icon.png"><link rel="stylesheet" href="{prefix}assets/style.css?v={STYLE_REVISION}"></head>
 <body><a class="skip" href="#main">本文へ移動</a><header><div class="wrap bar"><a class="brand" href="{prefix}"><img src="{prefix}assets/app-icon.png" alt="" width="46" height="46"><span>読書記録<small>READING LOG / SUPPORT</small></span></a><nav aria-label="メインナビゲーション">{nav('ホーム','','home')}{nav('プライバシー','privacy/','privacy')}{nav('サポート','support/','support')}</nav></div></header>
 <main id="main"><div class="wrap">{body}</div></main><footer><div class="wrap"><div class="footer-row"><span>© 2026 Mshota395</span><div class="footer-links"><a href="{prefix}privacy/">プライバシーポリシー</a><a href="{prefix}support/">サポート</a></div></div><p>このサイトはGitHub Pagesを利用しています。アクセス時の接続情報の扱いは<a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">GitHubのプライバシーに関する声明</a>もご確認ください。このサイトにアクセス解析・広告・問い合わせフォームは設置していません。</p></div></footer></body></html>'''
     destination = ROOT / route / "index.html"
